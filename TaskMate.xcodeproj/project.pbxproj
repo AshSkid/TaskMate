@@ -14,6 +14,11 @@
 		AEF0E5212B02963E0081A6F3 /* TaskMate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E51F2B02963E0081A6F3 /* TaskMate.xcdatamodeld */; };
 		AEF0E5232B0296420081A6F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEF0E5222B0296420081A6F3 /* Assets.xcassets */; };
 		AEF0E5262B0296420081A6F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEF0E5242B0296420081A6F3 /* LaunchScreen.storyboard */; };
+		AEF0E5362B0690E80081A6F3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5352B0690E80081A6F3 /* SettingsViewController.swift */; };
+		AEF0E5392B0691790081A6F3 /* CreateListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5382B0691790081A6F3 /* CreateListViewController.swift */; };
+		AEF0E53D2B0691BF0081A6F3 /* TaskList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E53C2B0691BF0081A6F3 /* TaskList.swift */; };
+		AEF0E5402B0691F40081A6F3 /* TaskListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */; };
+		AEF0E5442B0693700081A6F3 /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +32,11 @@
 		AEF0E5252B0296420081A6F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEF0E5272B0296420081A6F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AEF0E52F2B02989D0081A6F3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AEF0E5352B0690E80081A6F3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		AEF0E5382B0691790081A6F3 /* CreateListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListViewController.swift; sourceTree = "<group>"; };
+		AEF0E53C2B0691BF0081A6F3 /* TaskList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskList.swift; sourceTree = "<group>"; };
+		AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewController.swift; sourceTree = "<group>"; };
+		AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,14 +70,19 @@
 		AEF0E5152B02963E0081A6F3 /* TaskMate */ = {
 			isa = PBXGroup;
 			children = (
+				AEF0E5272B0296420081A6F3 /* Info.plist */,
 				AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */,
+				AEF0E5382B0691790081A6F3 /* CreateListViewController.swift */,
 				AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */,
+				AEF0E5352B0690E80081A6F3 /* SettingsViewController.swift */,
+				AEF0E53C2B0691BF0081A6F3 /* TaskList.swift */,
+				AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */,
 				AEF0E51A2B02963E0081A6F3 /* ViewController.swift */,
-				AEF0E51C2B02963E0081A6F3 /* Main.storyboard */,
 				AEF0E5222B0296420081A6F3 /* Assets.xcassets */,
 				AEF0E5242B0296420081A6F3 /* LaunchScreen.storyboard */,
-				AEF0E5272B0296420081A6F3 /* Info.plist */,
+				AEF0E51C2B02963E0081A6F3 /* Main.storyboard */,
 				AEF0E51F2B02963E0081A6F3 /* TaskMate.xcdatamodeld */,
+				AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */,
 			);
 			path = TaskMate;
 			sourceTree = "<group>";
@@ -142,9 +157,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEF0E53D2B0691BF0081A6F3 /* TaskList.swift in Sources */,
+				AEF0E5392B0691790081A6F3 /* CreateListViewController.swift in Sources */,
 				AEF0E51B2B02963E0081A6F3 /* ViewController.swift in Sources */,
 				AEF0E5172B02963E0081A6F3 /* AppDelegate.swift in Sources */,
 				AEF0E5192B02963E0081A6F3 /* SceneDelegate.swift in Sources */,
+				AEF0E5442B0693700081A6F3 /* CreateTaskViewController.swift in Sources */,
+				AEF0E5402B0691F40081A6F3 /* TaskListViewController.swift in Sources */,
+				AEF0E5362B0690E80081A6F3 /* SettingsViewController.swift in Sources */,
 				AEF0E5212B02963E0081A6F3 /* TaskMate.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
