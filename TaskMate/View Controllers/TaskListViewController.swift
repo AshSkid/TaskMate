@@ -74,6 +74,7 @@ class TaskListViewController: UIViewController {
         
 }
 
+
 extension TaskListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let task_list = TaskList.lists[self.task_list_index!]
@@ -85,6 +86,8 @@ extension TaskListViewController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = task_list.tasks[indexPath.row].name
+        
+        print("hello")
         
         return cell
     }

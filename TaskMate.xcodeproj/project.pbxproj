@@ -71,20 +71,36 @@
 			isa = PBXGroup;
 			children = (
 				AEF0E5272B0296420081A6F3 /* Info.plist */,
-				AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */,
-				AEF0E5382B0691790081A6F3 /* CreateListViewController.swift */,
-				AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */,
-				AEF0E5352B0690E80081A6F3 /* SettingsViewController.swift */,
+				AEF0E5472B0694C70081A6F3 /* Delegates */,
+				AEF0E5492B0694D70081A6F3 /* View Controllers */,
 				AEF0E53C2B0691BF0081A6F3 /* TaskList.swift */,
-				AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */,
-				AEF0E51A2B02963E0081A6F3 /* ViewController.swift */,
 				AEF0E5222B0296420081A6F3 /* Assets.xcassets */,
 				AEF0E5242B0296420081A6F3 /* LaunchScreen.storyboard */,
 				AEF0E51C2B02963E0081A6F3 /* Main.storyboard */,
 				AEF0E51F2B02963E0081A6F3 /* TaskMate.xcdatamodeld */,
-				AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */,
 			);
 			path = TaskMate;
+			sourceTree = "<group>";
+		};
+		AEF0E5472B0694C70081A6F3 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */,
+				AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		AEF0E5492B0694D70081A6F3 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				AEF0E5382B0691790081A6F3 /* CreateListViewController.swift */,
+				AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */,
+				AEF0E5352B0690E80081A6F3 /* SettingsViewController.swift */,
+				AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */,
+				AEF0E51A2B02963E0081A6F3 /* ViewController.swift */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
