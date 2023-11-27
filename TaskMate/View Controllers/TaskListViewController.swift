@@ -18,7 +18,6 @@ class TaskListViewController: UIViewController {
         
         self.safe_area = super.view.layoutMarginsGuide
         self.setup_table_view()
-        
     }
     
     func setup(_ task_index: Int){
@@ -29,7 +28,7 @@ class TaskListViewController: UIViewController {
         super.view.backgroundColor = task_list.color
         
         
-        if task_list.builtin == false {
+        if task_list.can_add_tasks {
             let button = UIButton()
             button.setTitle("Create", for: .normal)
             self.view.addSubview(button)
@@ -55,6 +54,9 @@ class TaskListViewController: UIViewController {
         self.table_view.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         self.table_view.dataSource = self
+        self.table_view.delegate = self
+        
+        self.table_view.separatorStyle = UITableViewCell.SeparatorStyle.none
     }
 
 
@@ -75,7 +77,7 @@ class TaskListViewController: UIViewController {
 }
 
 
-extension TaskListViewController: UITableViewDataSource {
+extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let task_list = TaskList.lists[self.task_list_index!]
         return task_list.tasks.count
@@ -85,11 +87,54 @@ extension TaskListViewController: UITableViewDataSource {
         let task_list = TaskList.lists[self.task_list_index!]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = task_list.tasks[indexPath.row].name
-        
-        print("hello")
-        
+        let task_uuid: String = task_list.tasks[indexPath.row]
+        cell.textLabel?.text = Task.tasks[task_uuid]!.name
+    
         return cell
     }
+    
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
+            print("delete")
+            completionHandler(true)
+        }
+        
+        delete.image = UIImage(systemName: "trash")
+        delete.backgroundColor = .red
+        
+        let swipe = UISwipeActionsConfiguration(actions: [delete])
+        return swipe
+    }
+    
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let add_to_today = UIContextualAction(style: .normal, title: "Add To Today"){ (action, view, completionHandler) in
+
+            TaskList.lists[self.task_list_index].toggle_task_in_today(indexPath.row)
+            
+            completionHandler(true)
+        }
+        
+        
+        let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+        if Task.tasks[task_uuid]!.is_in_today {
+            add_to_today.image = UIImage(systemName: "sunset")
+            
+        }else{
+            add_to_today.image = UIImage(systemName: "sunrise.fill")
+        }
+        
+        
+        add_to_today.backgroundColor = .orange
+        
+        
+        
+        
+        let swipe = UISwipeActionsConfiguration(actions: [add_to_today])
+        return swipe
+    }
+    
 }
 

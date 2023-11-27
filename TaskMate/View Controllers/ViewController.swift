@@ -56,34 +56,62 @@ class ViewController: UIViewController {
         self.table_view.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         self.table_view.dataSource = self
+        self.table_view.delegate = self
+        
+        self.table_view.separatorStyle = UITableViewCell.SeparatorStyle.none
+    }
+    
+    
+    func open_task_list(_ task_list_index: Int){
+        let task_view = TaskListViewController()
+        task_view.setup(task_list_index)
+        super.navigationController?.pushViewController(task_view, animated: true)
     }
 
 
     override func viewDidAppear(_ animated: Bool) {
         self.table_view.reloadData()
+        
+        if CreateListViewController.just_created {
+            CreateListViewController.just_created = false
+            self.open_task_list(TaskList.lists.count - 1)
+        }
     }
 }
 
 
 
-extension ViewController: UITableViewDataSource {
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return TaskList.lists.count
+        return TaskList.lists.count + 1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         //cell.textLabel?.text = "notes_list.at(indexPath.row)"
         
-        let task = TaskList.lists[indexPath.row]
+        if indexPath.row == 4 {
+            cell.textLabel?.text = "----------------------------------"
+            return cell
+        }
+        
+        let task_index: Int = {
+            if indexPath.row < 4 {
+                return indexPath.row
+            }else{
+                return indexPath.row - 1
+            }
+        }()
+        
+        let task_list = TaskList.lists[task_index]
         
         
         let button = UIButton()
-        button.setTitle(task.title, for: .normal)
+        button.setTitle(task_list.title, for: .normal)
         cell.addSubview(button)
         button.backgroundColor = .systemGray3
-        button.setTitleColor(task.color, for: .normal)
-        button.frame = CGRect(x: 0, y: 0, width: 200, height: 45)
+        button.setTitleColor(task_list.color, for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
         button.addTarget(self, action: #selector(self.clicked_task_list(sender:)), for: .touchUpInside)
         button.tag = indexPath.row
         
@@ -93,9 +121,30 @@ extension ViewController: UITableViewDataSource {
     
     
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 4 {
+            return 10
+        }
+        
+        return 40
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     @objc private func clicked_task_list(sender: UIButton){
-        let task_view = TaskListViewController()
-        task_view.setup(sender.tag)
-        super.navigationController?.pushViewController(task_view, animated: true)
+        let task_index: Int = {
+            if sender.tag < 4 {
+                return sender.tag
+            }else{
+                return sender.tag - 1
+            }
+        }()
+        
+        self.open_task_list(task_index)
     }
 }

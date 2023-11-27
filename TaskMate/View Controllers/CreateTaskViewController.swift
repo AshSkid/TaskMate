@@ -11,6 +11,24 @@ import UIKit
 
 class CreateTaskViewController: UIViewController {
     var task_list_index: Int!
+    var name_text_field: UITextField = {
+        var text_field: UITextField = UITextField(frame: CGRect(x: 100, y: 100, width: 200, height: 30));
+        text_field.backgroundColor = .systemGray3
+        text_field.placeholder = "Task Name"
+        
+//        sampleTextField.placeholder = "Enter text here"
+//        sampleTextField.font = UIFont.systemFont(ofSize: 15)
+//        sampleTextField.borderStyle = UITextField.BorderStyle.roundedRect
+//        sampleTextField.autocorrectionType = UITextAutocorrectionType.no
+//        sampleTextField.keyboardType = UIKeyboardType.default
+//        sampleTextField.returnKeyType = UIReturnKeyType.done
+//        sampleTextField.clearButtonMode = UITextField.ViewMode.whileEditing
+//        sampleTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+//        sampleTextField.delegate = self
+        
+        
+        return text_field
+    }()
     
     func setup(_ list_index: Int){
         self.task_list_index = list_index
@@ -24,12 +42,14 @@ class CreateTaskViewController: UIViewController {
         
         super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.dismiss_self))
         
+        self.view.addSubview(self.name_text_field)
+        
         let create_button = UIButton()
         create_button.setTitle("Create", for: .normal)
         super.view.addSubview(create_button)
         create_button.backgroundColor = .systemGray3
         create_button.setTitleColor(.white, for: .normal)
-        create_button.frame = CGRect(x: 100, y: 100, width: 200, height: 45)
+        create_button.frame = CGRect(x: 100, y: 200, width: 200, height: 45)
         create_button.addTarget(self, action: #selector(self.create_task), for: .touchUpInside)
     }
     
@@ -38,11 +58,26 @@ class CreateTaskViewController: UIViewController {
     }
     
     @objc func create_task(){
-        var task_list = TaskList.lists[self.task_list_index!]
+        let task_name: String = self.name_text_field.text!
         
-        task_list.tasks.append(TaskList.Task("Task \(task_list.tasks.count)"))
+        if task_name.count == 0 {
+            let alert = UIAlertController(title: "Task has no title!", message: "In order to create a Task, you must provide a title.", preferredStyle: UIAlertController.Style.alert)
+
+            // add an action (button)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+            
+        }else{
+            withUnsafeMutablePointer(to: &TaskList.lists[self.task_list_index!]){
+                let new_task_uuid: String = Task.create_task(task_name)
+                $0.pointee.tasks.append(new_task_uuid)
+            }
+                    
+            self.dismiss_self()
+        }
         
-        self.dismiss_self()
     }
 }
 
