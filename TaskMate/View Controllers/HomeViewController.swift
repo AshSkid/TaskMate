@@ -8,7 +8,7 @@
 import UIKit
 
 
-class ViewController: UIViewController {
+class HomeViewController: UIViewController {
     let table_view = UITableView()
     var safe_area: UILayoutGuide!
     
@@ -81,7 +81,7 @@ class ViewController: UIViewController {
 
 
 
-extension ViewController: UITableViewDataSource, UITableViewDelegate {
+extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return TaskList.lists.count + 1
     }

@@ -94,6 +94,11 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     
+    
+    
+
+    
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if self.task_list_index == TaskList.deleted_index {
             let permanently_delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
