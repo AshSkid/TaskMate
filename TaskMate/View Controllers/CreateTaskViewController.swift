@@ -70,10 +70,8 @@ class CreateTaskViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
             
         }else{
-            withUnsafeMutablePointer(to: &TaskList.lists[self.task_list_index!]){
-                let new_task_uuid: String = Task.create_task(task_name)
-                $0.pointee.tasks.append(new_task_uuid)
-            }
+            let new_task_uuid: String = Task.create_task(task_name, self.task_list_index)
+            TaskList.lists[self.task_list_index!].tasks.append(new_task_uuid)
                     
             self.dismiss_self()
         }

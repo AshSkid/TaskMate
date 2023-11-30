@@ -95,45 +95,119 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
-            print("delete")
-            completionHandler(true)
-        }
-        
-        delete.image = UIImage(systemName: "trash")
-        delete.backgroundColor = .red
-        
-        let swipe = UISwipeActionsConfiguration(actions: [delete])
-        return swipe
-    }
-    
-    
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let add_to_today = UIContextualAction(style: .normal, title: "Add To Today"){ (action, view, completionHandler) in
-
-            TaskList.lists[self.task_list_index].toggle_task_in_today(indexPath.row)
+        if self.task_list_index == TaskList.deleted_index {
+            let permanently_delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
+                
+                let alert = UIAlertController(title: "Permanently Delete Task?", message: "Are you sure you want to permanently delete this task?", preferredStyle: UIAlertController.Style.alert)
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { (_) -> Void in
+                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+                    
+                    TaskList.lists[TaskList.deleted_index].remove_task(uuid)
+                    Task.tasks.removeValue(forKey: uuid)
+                    
+                    self.table_view.reloadData()
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                
+                completionHandler(true)
+            }
             
-            completionHandler(true)
-        }
-        
-        
-        let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
-        if Task.tasks[task_uuid]!.is_in_today {
-            add_to_today.image = UIImage(systemName: "sunset")
+            permanently_delete.image = UIImage(systemName: "trash")
+            permanently_delete.backgroundColor = .red
+            
+            let swipe = UISwipeActionsConfiguration(actions: [permanently_delete])
+            return swipe
             
         }else{
-            add_to_today.image = UIImage(systemName: "sunrise.fill")
+            let delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
+                
+                let alert = UIAlertController(title: "Delete Task?", message: "Are you sure you want to delete this task?", preferredStyle: UIAlertController.Style.alert)
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { (_) -> Void in
+                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+                    Task.delete_task(uuid)
+                    
+                    self.table_view.reloadData()
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                
+                completionHandler(true)
+            }
+            
+            delete.image = UIImage(systemName: "trash")
+            delete.backgroundColor = .red
+            
+            let swipe = UISwipeActionsConfiguration(actions: [delete])
+            return swipe
         }
-        
-        
-        add_to_today.backgroundColor = .orange
-        
-        
-        
-        
-        let swipe = UISwipeActionsConfiguration(actions: [add_to_today])
-        return swipe
+    }
+
+    
+    
+     
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if self.task_list_index == TaskList.deleted_index {
+            let restore = UIContextualAction(style: .normal, title: "Restore"){ (action, view, completionHandler) in
+                
+                let alert = UIAlertController(title: "Restore Task?", message: "Are you sure you want to restore this task?", preferredStyle: UIAlertController.Style.alert)
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Restore", style: UIAlertAction.Style.default, handler: { (_) -> Void in
+                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+                    Task.restore_task(uuid)
+                    
+                    self.table_view.reloadData()
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                
+                completionHandler(true)
+            }
+            
+            restore.image = UIImage(systemName: "arrow.backward.circle")
+            restore.backgroundColor = .blue
+            
+            let swipe = UISwipeActionsConfiguration(actions: [restore])
+            return swipe
+            
+            
+        }else{
+            let add_to_today = UIContextualAction(style: .normal, title: "Add To Today"){ (action, view, completionHandler) in
+
+                TaskList.lists[self.task_list_index].toggle_task_in_today(indexPath.row)
+                
+                completionHandler(true)
+                
+                if self.task_list_index == TaskList.today_index {
+                    self.table_view.reloadData()
+                }
+            }
+            
+            
+            let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+            if Task.tasks[task_uuid]!.is_in_today {
+                add_to_today.image = UIImage(systemName: "sunset")
+                
+            }else{
+                add_to_today.image = UIImage(systemName: "sunrise.fill")
+            }
+            
+            
+            add_to_today.backgroundColor = .orange
+            
+            
+            
+            
+            let swipe = UISwipeActionsConfiguration(actions: [add_to_today])
+            return swipe
+        }
+    
     }
     
 }
