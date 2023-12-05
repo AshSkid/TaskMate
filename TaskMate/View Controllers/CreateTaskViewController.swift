@@ -30,6 +30,18 @@ class CreateTaskViewController: UIViewController {
         return text_field
     }()
     
+    
+    
+    var date_picker: UIDatePicker = {
+        var picker = UIDatePicker(frame: CGRect(x: 100, y: 200, width: 200, height: 30))
+        picker.preferredDatePickerStyle = .compact
+        
+        return picker
+    }()
+    
+    
+    
+    
     func setup(_ list_index: Int){
         self.task_list_index = list_index
     }
@@ -44,14 +56,18 @@ class CreateTaskViewController: UIViewController {
         
         self.view.addSubview(self.name_text_field)
         
+        self.view.addSubview(self.date_picker)
+        
         let create_button = UIButton()
         create_button.setTitle("Create", for: .normal)
         super.view.addSubview(create_button)
         create_button.backgroundColor = .systemGray3
         create_button.setTitleColor(.white, for: .normal)
-        create_button.frame = CGRect(x: 100, y: 200, width: 200, height: 45)
+        create_button.frame = CGRect(x: 100, y: 400, width: 200, height: 45)
         create_button.addTarget(self, action: #selector(self.create_task), for: .touchUpInside)
     }
+    
+    
     
     @objc private func dismiss_self(){
         super.dismiss(animated: true, completion: nil)
@@ -62,22 +78,27 @@ class CreateTaskViewController: UIViewController {
         
         if task_name.count == 0 {
             let alert = UIAlertController(title: "Task has no title!", message: "In order to create a Task, you must provide a title.", preferredStyle: UIAlertController.Style.alert)
-
-            // add an action (button)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
 
-            // show the alert
             self.present(alert, animated: true, completion: nil)
             
         }else{
-            let new_task_uuid: String = Task.create_task(task_name, self.task_list_index)
+            let date: Date = self.date_picker.date
+            
+            let new_task_uuid: String = Task.create_task(task_name, self.task_list_index, date)
             TaskList.lists[self.task_list_index!].tasks.append(new_task_uuid)
                     
             self.dismiss_self()
         }
         
     }
+    
 }
+
+
+
+
+
 
 
 

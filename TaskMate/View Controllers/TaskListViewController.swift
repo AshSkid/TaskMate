@@ -73,7 +73,7 @@ class TaskListViewController: UIViewController {
         navVC.modalPresentationStyle = .fullScreen
         super.present(navVC, animated: true)
     }
-        
+    
 }
 
 
@@ -82,22 +82,69 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let task_list = TaskList.lists[self.task_list_index!]
         return task_list.tasks.count
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40
+    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let task_list = TaskList.lists[self.task_list_index!]
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let task_uuid: String = task_list.tasks[indexPath.row]
-        cell.textLabel?.text = Task.tasks[task_uuid]!.name
+        let task_uuid: String = TaskList.lists[self.task_list_index!].tasks[indexPath.row]
+        
+        
+        let button = UIButton()
+        if Task.tasks[task_uuid]!.is_completed {
+            button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+        }else{
+            button.setImage(UIImage(systemName: "circle"), for: .normal)
+        }
+        
+        
+        
+        cell.addSubview(button)
+        button.backgroundColor = .systemGray3
+        button.frame = CGRect(x: 15, y: 10, width: 20, height: 20)
+        button.addTarget(self, action: #selector(self.toggle_task_completd(sender:)), for: .touchUpInside)
+        button.tag = indexPath.row
+        
+        
+        let label = UILabel()
+        label.text = Task.tasks[task_uuid]!.name
+        cell.addSubview(label)
+        label.frame = CGRect(x: 40, y: 0, width: 200, height: 40)
+        label.textColor = .white
+        label.textAlignment = .justified
+        
+        let date_formatter = DateFormatter()
+        date_formatter.dateStyle = .short
+        date_formatter.timeStyle = .short
+        let formatted_date: String = date_formatter.string(from: Task.tasks[task_uuid]!.due_date)
+        
+        let date = UILabel()
+        date.text = formatted_date
+        cell.addSubview(date)
+        date.frame = CGRect(x: 120, y: 0, width: 200, height: 40)
+        if Task.tasks[task_uuid]!.due_date < Date() {
+            date.textColor = .red
+        }else{
+            date.textColor = .white
+        }
+        
+        date.textAlignment = .justified
     
         return cell
     }
     
-    
+    @objc func toggle_task_completd(sender: UIButton){
+        let uuid: String = TaskList.lists[self.task_list_index].tasks[sender.tag]
+        
+        Task.tasks[uuid]!.is_completed = !(Task.tasks[uuid]!.is_completed)
+        
+        self.table_view.reloadData()
+    }
     
     
 
-    
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if self.task_list_index == TaskList.deleted_index {
@@ -203,17 +250,21 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                 add_to_today.image = UIImage(systemName: "sunrise.fill")
             }
             
-            
             add_to_today.backgroundColor = .orange
-            
-            
-            
             
             let swipe = UISwipeActionsConfiguration(actions: [add_to_today])
             return swipe
         }
     
     }
+    
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+        print("select: \(Task.tasks[task_uuid]!.name)")
+    }
+    
     
 }
 

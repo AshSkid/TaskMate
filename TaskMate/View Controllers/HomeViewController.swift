@@ -88,7 +88,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        //cell.textLabel?.text = "notes_list.at(indexPath.row)"
         
         if indexPath.row == 4 {
             cell.textLabel?.text = "----------------------------------"

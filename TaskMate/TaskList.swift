@@ -16,11 +16,14 @@ struct Task{
     var uuid: String
     var home_list: Int // list this task lives in
     var is_deleted: Bool = false
+    var is_completed: Bool = false
+    var due_date: Date
     
-    init(_ title: String, _ id: String, _ originating_list: Int){
+    init(_ title: String, _ id: String, _ originating_list: Int, _ due: Date){
         self.name = title
         self.uuid = id
         self.home_list = originating_list
+        self.due_date = due
     }
     
     
@@ -29,10 +32,10 @@ struct Task{
     
     static var tasks: [String : Task] = [:]
     
-    static func create_task(_ title: String, _ originating_list: Int) -> String {
+    static func create_task(_ title: String, _ originating_list: Int, _ due: Date) -> String {
         let uuid = UUID().uuidString
         
-        tasks[uuid] = Task(title, uuid, originating_list)
+        tasks[uuid] = Task(title, uuid, originating_list, due)
         
         TaskList.lists[TaskList.all_index].tasks.append(uuid)
         
