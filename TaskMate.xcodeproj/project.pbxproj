@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AEB5DF6A2B223FA00099E9B0 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB5DF692B223FA00099E9B0 /* StyleManager.swift */; };
 		AEF0E5172B02963E0081A6F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */; };
 		AEF0E5192B02963E0081A6F3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */; };
 		AEF0E51E2B02963E0081A6F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEF0E51C2B02963E0081A6F3 /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AEB5DF692B223FA00099E9B0 /* StyleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManager.swift; sourceTree = "<group>"; };
 		AEF0E5132B02963E0081A6F3 /* TaskMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,13 +73,14 @@
 			isa = PBXGroup;
 			children = (
 				AEF0E5272B0296420081A6F3 /* Info.plist */,
-				AEF0E5472B0694C70081A6F3 /* Delegates */,
-				AEF0E5492B0694D70081A6F3 /* View Controllers */,
+				AEB5DF692B223FA00099E9B0 /* StyleManager.swift */,
 				AEF0E53C2B0691BF0081A6F3 /* TaskList.swift */,
 				AEF0E5222B0296420081A6F3 /* Assets.xcassets */,
+				AEF0E5472B0694C70081A6F3 /* Delegates */,
 				AEF0E5242B0296420081A6F3 /* LaunchScreen.storyboard */,
 				AEF0E51C2B02963E0081A6F3 /* Main.storyboard */,
 				AEF0E51F2B02963E0081A6F3 /* TaskMate.xcdatamodeld */,
+				AEF0E5492B0694D70081A6F3 /* View Controllers */,
 			);
 			path = TaskMate;
 			sourceTree = "<group>";
@@ -96,9 +99,9 @@
 			children = (
 				AEF0E5382B0691790081A6F3 /* CreateListViewController.swift */,
 				AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */,
+				AEF0E56F2B19079B0081A6F3 /* HomeViewController.swift */,
 				AEF0E5352B0690E80081A6F3 /* SettingsViewController.swift */,
 				AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */,
-				AEF0E56F2B19079B0081A6F3 /* HomeViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				AEF0E5702B19079B0081A6F3 /* HomeViewController.swift in Sources */,
 				AEF0E5442B0693700081A6F3 /* CreateTaskViewController.swift in Sources */,
 				AEF0E5402B0691F40081A6F3 /* TaskListViewController.swift in Sources */,
+				AEB5DF6A2B223FA00099E9B0 /* StyleManager.swift in Sources */,
 				AEF0E5362B0690E80081A6F3 /* SettingsViewController.swift in Sources */,
 				AEF0E5212B02963E0081A6F3 /* TaskMate.xcdatamodeld in Sources */,
 			);

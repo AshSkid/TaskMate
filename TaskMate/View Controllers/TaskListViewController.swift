@@ -61,6 +61,14 @@ class TaskListViewController: UIViewController {
 
 
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.table_view.reloadData()
+    }
+    
+    // handle rotate
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
         self.table_view.reloadData()
     }
     
@@ -73,7 +81,6 @@ class TaskListViewController: UIViewController {
         navVC.modalPresentationStyle = .fullScreen
         super.present(navVC, animated: true)
     }
-    
 }
 
 
@@ -85,7 +92,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return StyleManager.row_height()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -93,9 +100,10 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let task_uuid: String = TaskList.lists[self.task_list_index!].tasks[indexPath.row]
         
         
-        let background = UIView(frame: CGRect(x: 0, y: 0, width: 250, height: 30))
-        background.backgroundColor = .systemGray3
+        let background = UIView(frame: StyleManager.get_default_row_frame())
+        background.backgroundColor = StyleManager.Theme.fill()
         cell.addSubview(background)
+        background.layer.cornerRadius = StyleManager.corner_radius()
         
         
         let button = UIButton()
@@ -108,8 +116,8 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
 
 
         background.addSubview(button)
-        button.backgroundColor = .systemGray3
-        button.frame = CGRect(x: 15, y: 10, width: 20, height: 20)
+//        button.backgroundColor = StyleManager.Theme.fill()
+        button.frame = CGRect(x: 2*StyleManager.row_padding_width(), y: 10, width: 20, height: 20)
         button.addTarget(self, action: #selector(self.toggle_task_completd(sender:)), for: .touchUpInside)
         button.tag = indexPath.row
 
@@ -117,7 +125,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let label = UILabel()
         label.text = Task.tasks[task_uuid]!.name
         background.addSubview(label)
-        label.frame = CGRect(x: 40, y: 0, width: 200, height: 40)
+        label.frame = CGRect(x: 3*StyleManager.row_padding_width() + 20, y: 0, width: StyleManager.screen_width(), height: StyleManager.row_height())
         label.textColor = .white
         label.textAlignment = .justified
 

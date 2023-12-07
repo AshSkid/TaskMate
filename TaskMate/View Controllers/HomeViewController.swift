@@ -90,7 +90,9 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         if indexPath.row == 4 {
-            cell.textLabel?.text = "----------------------------------"
+            let line = UIView(frame: CGRect(x: 0, y: 0, width: StyleManager.screen_width(), height: 1))
+            line.backgroundColor = StyleManager.Theme.text()
+            cell.addSubview(line)
             return cell
         }
         
