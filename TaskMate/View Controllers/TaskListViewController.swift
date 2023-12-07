@@ -77,6 +77,7 @@ class TaskListViewController: UIViewController {
 }
 
 
+
 extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let task_list = TaskList.lists[self.task_list_index!]
@@ -92,44 +93,49 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let task_uuid: String = TaskList.lists[self.task_list_index!].tasks[indexPath.row]
         
         
+        let background = UIView(frame: CGRect(x: 0, y: 0, width: 250, height: 30))
+        background.backgroundColor = .systemGray3
+        cell.addSubview(background)
+        
+        
         let button = UIButton()
         if Task.tasks[task_uuid]!.is_completed {
             button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
         }else{
             button.setImage(UIImage(systemName: "circle"), for: .normal)
         }
-        
-        
-        
-        cell.addSubview(button)
+
+
+
+        background.addSubview(button)
         button.backgroundColor = .systemGray3
         button.frame = CGRect(x: 15, y: 10, width: 20, height: 20)
         button.addTarget(self, action: #selector(self.toggle_task_completd(sender:)), for: .touchUpInside)
         button.tag = indexPath.row
-        
-        
+
+
         let label = UILabel()
         label.text = Task.tasks[task_uuid]!.name
-        cell.addSubview(label)
+        background.addSubview(label)
         label.frame = CGRect(x: 40, y: 0, width: 200, height: 40)
         label.textColor = .white
         label.textAlignment = .justified
-        
+
         let date_formatter = DateFormatter()
         date_formatter.dateStyle = .short
         date_formatter.timeStyle = .short
         let formatted_date: String = date_formatter.string(from: Task.tasks[task_uuid]!.due_date)
-        
+
         let date = UILabel()
         date.text = formatted_date
-        cell.addSubview(date)
+        background.addSubview(date)
         date.frame = CGRect(x: 120, y: 0, width: 200, height: 40)
         if Task.tasks[task_uuid]!.due_date < Date() {
             date.textColor = .red
         }else{
             date.textColor = .white
         }
-        
+
         date.textAlignment = .justified
     
         return cell
@@ -262,7 +268,13 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
-        print("select: \(Task.tasks[task_uuid]!.name)")
+        
+        let rootVC = CreateTaskViewController()
+        rootVC.setup(self.task_list_index, task_uuid)
+       
+        let navVC = UINavigationController(rootViewController: rootVC)
+        navVC.modalPresentationStyle = .fullScreen
+        super.present(navVC, animated: true)
     }
     
     

@@ -10,6 +10,14 @@ import UIKit
 
 
 class CreateTaskViewController: UIViewController {
+    enum Mode {
+        case create
+        case edit
+    }
+    var mode: Mode!
+    var task_uuid: String? // only used if mode is .edit
+        
+    
     var task_list_index: Int!
     var name_text_field: UITextField = {
         var text_field: UITextField = UITextField(frame: CGRect(x: 100, y: 100, width: 200, height: 30));
@@ -31,7 +39,6 @@ class CreateTaskViewController: UIViewController {
     }()
     
     
-    
     var date_picker: UIDatePicker = {
         var picker = UIDatePicker(frame: CGRect(x: 100, y: 200, width: 200, height: 30))
         picker.preferredDatePickerStyle = .compact
@@ -44,13 +51,27 @@ class CreateTaskViewController: UIViewController {
     
     func setup(_ list_index: Int){
         self.task_list_index = list_index
+        self.mode = .create
     }
+    
+    func setup(_ list_index: Int, _ task_to_edit: String){
+        self.task_list_index = list_index
+        self.mode = .edit
+        self.task_uuid = task_to_edit
+    }
+    
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         super.view.backgroundColor = .systemBackground
-        super.navigationItem.title = "Create Task"
+        if self.mode == .create {
+            super.navigationItem.title = "Create Task"
+        }else{
+            super.navigationItem.title = "Edit Task"
+        }
+        
         
         super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.dismiss_self))
         
@@ -59,12 +80,19 @@ class CreateTaskViewController: UIViewController {
         self.view.addSubview(self.date_picker)
         
         let create_button = UIButton()
-        create_button.setTitle("Create", for: .normal)
+        if self.mode == .create {
+            create_button.setTitle("Create", for: .normal)
+        }else{
+            create_button.setTitle("Update", for: .normal)
+            self.name_text_field.text = Task.tasks[self.task_uuid!]!.name
+            self.date_picker.date = Task.tasks[self.task_uuid!]!.due_date
+        }
+        
         super.view.addSubview(create_button)
         create_button.backgroundColor = .systemGray3
         create_button.setTitleColor(.white, for: .normal)
         create_button.frame = CGRect(x: 100, y: 400, width: 200, height: 45)
-        create_button.addTarget(self, action: #selector(self.create_task), for: .touchUpInside)
+        create_button.addTarget(self, action: #selector(self.complete), for: .touchUpInside)
     }
     
     
@@ -73,7 +101,7 @@ class CreateTaskViewController: UIViewController {
         super.dismiss(animated: true, completion: nil)
     }
     
-    @objc func create_task(){
+    @objc func complete(){
         let task_name: String = self.name_text_field.text!
         
         if task_name.count == 0 {
@@ -85,12 +113,18 @@ class CreateTaskViewController: UIViewController {
         }else{
             let date: Date = self.date_picker.date
             
-            let new_task_uuid: String = Task.create_task(task_name, self.task_list_index, date)
-            TaskList.lists[self.task_list_index!].tasks.append(new_task_uuid)
+            if self.mode == .create {
+                let new_task_uuid: String = Task.create_task(task_name, self.task_list_index, date)
+                TaskList.lists[self.task_list_index!].tasks.append(new_task_uuid)
+            }else{
+                Task.tasks[self.task_uuid!]!.name = task_name
+                Task.tasks[self.task_uuid!]!.due_date = date
+            }
+            
+            
                     
             self.dismiss_self()
         }
-        
     }
     
 }
