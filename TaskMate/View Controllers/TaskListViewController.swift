@@ -27,6 +27,9 @@ class TaskListViewController: UIViewController {
         super.navigationItem.title = task_list.title
         super.view.backgroundColor = task_list.color
         
+    
+        super.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(open_task_list_settings))
+        
         
         if task_list.can_add_tasks {
             let button = UIButton()
@@ -63,6 +66,13 @@ class TaskListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.table_view.reloadData()
+        
+        // update in case was changed in settings
+        
+        let task_list = TaskList.lists[self.task_list_index]
+        
+        super.navigationItem.title = task_list.title
+        super.view.backgroundColor = task_list.color
     }
     
     // handle rotate
@@ -75,6 +85,17 @@ class TaskListViewController: UIViewController {
     
     @objc func create_task(){
         let rootVC = CreateTaskViewController()
+        rootVC.setup(self.task_list_index)
+       
+        let navVC = UINavigationController(rootViewController: rootVC)
+        navVC.modalPresentationStyle = .fullScreen
+        super.present(navVC, animated: true)
+    }
+    
+    
+    
+    @objc func open_task_list_settings() -> Void {
+        let rootVC = CreateListViewController()
         rootVC.setup(self.task_list_index)
        
         let navVC = UINavigationController(rootViewController: rootVC)
@@ -97,7 +118,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let task_uuid: String = TaskList.lists[self.task_list_index!].tasks[indexPath.row]
+        let task_uuid: UUID = TaskList.lists[self.task_list_index!].tasks[indexPath.row]
         
         
         let background = UIView(frame: StyleManager.get_default_row_frame())
@@ -150,7 +171,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     @objc func toggle_task_completd(sender: UIButton){
-        let uuid: String = TaskList.lists[self.task_list_index].tasks[sender.tag]
+        let uuid: UUID = TaskList.lists[self.task_list_index].tasks[sender.tag]
         
         Task.tasks[uuid]!.is_completed = !(Task.tasks[uuid]!.is_completed)
         
@@ -168,7 +189,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { (_) -> Void in
-                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+                    let uuid: UUID = TaskList.lists[self.task_list_index].tasks[indexPath.row]
                     
                     TaskList.lists[TaskList.deleted_index].remove_task(uuid)
                     Task.tasks.removeValue(forKey: uuid)
@@ -194,7 +215,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { (_) -> Void in
-                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+                    let uuid: UUID = TaskList.lists[self.task_list_index].tasks[indexPath.row]
                     Task.delete_task(uuid)
                     
                     self.table_view.reloadData()
@@ -225,7 +246,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: "Restore", style: UIAlertAction.Style.default, handler: { (_) -> Void in
-                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+                    let uuid: UUID = TaskList.lists[self.task_list_index].tasks[indexPath.row]
                     Task.restore_task(uuid)
                     
                     self.table_view.reloadData()
@@ -256,7 +277,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
             }
             
             
-            let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+            let task_uuid: UUID = TaskList.lists[self.task_list_index].tasks[indexPath.row]
             if Task.tasks[task_uuid]!.is_in_today {
                 add_to_today.image = UIImage(systemName: "sunset")
                 
@@ -275,7 +296,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let task_uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+        let task_uuid: UUID = TaskList.lists[self.task_list_index].tasks[indexPath.row]
         
         let rootVC = CreateTaskViewController()
         rootVC.setup(self.task_list_index, task_uuid)

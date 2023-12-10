@@ -15,7 +15,7 @@ class CreateTaskViewController: UIViewController {
         case edit
     }
     var mode: Mode!
-    var task_uuid: String? // only used if mode is .edit
+    var task_uuid: UUID? // only used if mode is .edit
         
     
     var task_list_index: Int!
@@ -54,7 +54,7 @@ class CreateTaskViewController: UIViewController {
         self.mode = .create
     }
     
-    func setup(_ list_index: Int, _ task_to_edit: String){
+    func setup(_ list_index: Int, _ task_to_edit: UUID){
         self.task_list_index = list_index
         self.mode = .edit
         self.task_uuid = task_to_edit
@@ -114,7 +114,7 @@ class CreateTaskViewController: UIViewController {
             let date: Date = self.date_picker.date
             
             if self.mode == .create {
-                let new_task_uuid: String = Task.create_task(task_name, self.task_list_index, date)
+                let new_task_uuid: UUID = Task.create_task(task_name, self.task_list_index, date)
                 TaskList.lists[self.task_list_index!].tasks.append(new_task_uuid)
             }else{
                 Task.tasks[self.task_uuid!]!.name = task_name

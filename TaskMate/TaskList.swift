@@ -13,13 +13,13 @@ import UIKit
 struct Task{
     var name: String
     var is_in_today: Bool = false
-    var uuid: String
+    var uuid: UUID
     var home_list: Int // list this task lives in
     var is_deleted: Bool = false
     var is_completed: Bool = false
     var due_date: Date
     
-    init(_ title: String, _ id: String, _ originating_list: Int, _ due: Date){
+    init(_ title: String, _ id: UUID, _ originating_list: Int, _ due: Date){
         self.name = title
         self.uuid = id
         self.home_list = originating_list
@@ -30,10 +30,12 @@ struct Task{
     //./////////////////////////////////////////////////
     // Task management
     
-    static var tasks: [String : Task] = [:]
     
-    static func create_task(_ title: String, _ originating_list: Int, _ due: Date) -> String {
-        let uuid = UUID().uuidString
+    
+    static var tasks: [UUID : Task] = [:]
+    
+    static func create_task(_ title: String, _ originating_list: Int, _ due: Date) -> UUID {
+        let uuid = UUID()
         
         tasks[uuid] = Task(title, uuid, originating_list, due)
         
@@ -42,7 +44,7 @@ struct Task{
         return uuid
     }
     
-    static func delete_task(_ uuid: String) -> Void {
+    static func delete_task(_ uuid: UUID) -> Void {
         let originating_list_index: Int = Task.tasks[uuid]!.home_list
         TaskList.lists[originating_list_index].remove_task(uuid)
         
@@ -61,7 +63,7 @@ struct Task{
         TaskList.lists[TaskList.deleted_index].tasks.append(uuid)
     }
     
-    static func restore_task(_ uuid: String) -> Void {
+    static func restore_task(_ uuid: UUID) -> Void {
         let originating_list_index: Int = Task.tasks[uuid]!.home_list
         TaskList.lists[originating_list_index].tasks.append(uuid)
         
@@ -80,6 +82,7 @@ struct Task{
 
 
 struct TaskList{
+    static var list_map: [UUID : TaskList] = [:]
     static var lists: [TaskList] = []
     
     static let today_index = 0
@@ -91,19 +94,23 @@ struct TaskList{
     
     var title: String
     var color: UIColor
+    var tasks: [UUID] = []
     var can_add_tasks: Bool
-    var tasks: [String] = []
+    var uuid: UUID?
     
-        
-    init(_ list_title: String, _ list_color: UIColor, _ has_add_task_button: Bool){
+    
+    init(_ list_title: String, _ list_color: UIColor, _ id: UUID, _ adding_tasks_allowed: Bool){
         self.title = list_title
         self.color = list_color
-        self.can_add_tasks = has_add_task_button
+        self.uuid = id
+        self.can_add_tasks = adding_tasks_allowed
     }
     
     
+    
+    
     func toggle_task_in_today(_ task_index: Int) -> Void {
-        let task_uuid: String = self.tasks[task_index]
+        let task_uuid: UUID = self.tasks[task_index]
         
         let task_currently_in_today: Bool = Task.tasks[task_uuid]!.is_in_today
         
@@ -120,7 +127,7 @@ struct TaskList{
     }
     
     
-    mutating func remove_task(_ uuid: String) -> Void {
+    mutating func remove_task(_ uuid: UUID) -> Void {
         for i in 0..<self.tasks.count {
             if self.tasks[i] == uuid {
                 self.tasks.remove(at: i)
@@ -131,15 +138,23 @@ struct TaskList{
     
     
     static func setup_lists(){
-        TaskList.lists.removeAll()
-        TaskList.lists.append(TaskList.init("Today", .orange, false))
-        TaskList.lists.append(TaskList.init("Misc Tasks", .gray, true))
-        TaskList.lists.append(TaskList.init("All", .green, false))
-        TaskList.lists.append(TaskList.init("Deleted", .red, false))
+//        TaskList.lists.removeAll()
+        
+        TaskList.lists.append(TaskList.init("Today", .orange, UUID(uuidString: "00000000-0000-0000-0000-000000000000")!, false))
+        TaskList.lists.append(TaskList.init("Misc Tasks", .gray, UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, true))
+        TaskList.lists.append(TaskList.init("All", .green, UUID(uuidString: "00000000-0000-0000-0000-000000000002")!, false))
+        TaskList.lists.append(TaskList.init("Deleted", .red, UUID(uuidString: "00000000-0000-0000-0000-000000000003")!, false))
     }
     
+    
     static func add_list(_ title: String, _ color: UIColor){
-        TaskList.lists.append(TaskList.init(title, color, true))
+        TaskList.lists.append(TaskList.init(title, color, UUID(), true))
     }
+    
+    static func create_new_list(_ title: String, _ color: UIColor){
+        TaskList.add_list(title, color)
+        CoreDataManager.create_task_list(title, color)
+    }
+    
 }
 

@@ -20,6 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let controller = HomeViewController()
         let nav_controller = UINavigationController(rootViewController: controller)
         self.window?.rootViewController = nav_controller
+        
+        TaskList.setup_lists()
+        
+        CoreDataManager.setup()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

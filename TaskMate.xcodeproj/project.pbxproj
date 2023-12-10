@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AEB5DF6A2B223FA00099E9B0 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB5DF692B223FA00099E9B0 /* StyleManager.swift */; };
+		AEB5DF7F2B2288E50099E9B0 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB5DF7E2B2288E50099E9B0 /* CoreDataManager.swift */; };
 		AEF0E5172B02963E0081A6F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */; };
 		AEF0E5192B02963E0081A6F3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */; };
 		AEF0E51E2B02963E0081A6F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEF0E51C2B02963E0081A6F3 /* Main.storyboard */; };
@@ -20,10 +21,13 @@
 		AEF0E5402B0691F40081A6F3 /* TaskListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */; };
 		AEF0E5442B0693700081A6F3 /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */; };
 		AEF0E5702B19079B0081A6F3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF0E56F2B19079B0081A6F3 /* HomeViewController.swift */; };
+		AEF6E3132B25150200C858A5 /* TaskListCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6E3112B2514FE00C858A5 /* TaskListCoreData+CoreDataClass.swift */; };
+		AEF6E3142B25150200C858A5 /* TaskListCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6E3122B2514FE00C858A5 /* TaskListCoreData+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AEB5DF692B223FA00099E9B0 /* StyleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManager.swift; sourceTree = "<group>"; };
+		AEB5DF7E2B2288E50099E9B0 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		AEF0E5132B02963E0081A6F3 /* TaskMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEF0E5162B02963E0081A6F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AEF0E5182B02963E0081A6F3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +43,8 @@
 		AEF0E53F2B0691F40081A6F3 /* TaskListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewController.swift; sourceTree = "<group>"; };
 		AEF0E5432B0693700081A6F3 /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		AEF0E56F2B19079B0081A6F3 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		AEF6E3112B2514FE00C858A5 /* TaskListCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskListCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AEF6E3122B2514FE00C858A5 /* TaskListCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskListCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,12 +58,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AEB5DF752B2286130099E9B0 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				AEF6E3112B2514FE00C858A5 /* TaskListCoreData+CoreDataClass.swift */,
+				AEF6E3122B2514FE00C858A5 /* TaskListCoreData+CoreDataProperties.swift */,
+				AEB5DF7E2B2288E50099E9B0 /* CoreDataManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		AEF0E50A2B02963E0081A6F3 = {
 			isa = PBXGroup;
 			children = (
 				AEF0E52F2B02989D0081A6F3 /* README.md */,
-				AEF0E5152B02963E0081A6F3 /* TaskMate */,
 				AEF0E5142B02963E0081A6F3 /* Products */,
+				AEF0E5152B02963E0081A6F3 /* TaskMate */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +92,7 @@
 				AEB5DF692B223FA00099E9B0 /* StyleManager.swift */,
 				AEF0E53C2B0691BF0081A6F3 /* TaskList.swift */,
 				AEF0E5222B0296420081A6F3 /* Assets.xcassets */,
+				AEB5DF752B2286130099E9B0 /* CoreData */,
 				AEF0E5472B0694C70081A6F3 /* Delegates */,
 				AEF0E5242B0296420081A6F3 /* LaunchScreen.storyboard */,
 				AEF0E51C2B02963E0081A6F3 /* Main.storyboard */,
@@ -176,12 +193,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEF6E3142B25150200C858A5 /* TaskListCoreData+CoreDataProperties.swift in Sources */,
 				AEF0E53D2B0691BF0081A6F3 /* TaskList.swift in Sources */,
+				AEF6E3132B25150200C858A5 /* TaskListCoreData+CoreDataClass.swift in Sources */,
 				AEF0E5392B0691790081A6F3 /* CreateListViewController.swift in Sources */,
 				AEF0E5172B02963E0081A6F3 /* AppDelegate.swift in Sources */,
 				AEF0E5192B02963E0081A6F3 /* SceneDelegate.swift in Sources */,
 				AEF0E5702B19079B0081A6F3 /* HomeViewController.swift in Sources */,
 				AEF0E5442B0693700081A6F3 /* CreateTaskViewController.swift in Sources */,
+				AEB5DF7F2B2288E50099E9B0 /* CoreDataManager.swift in Sources */,
 				AEF0E5402B0691F40081A6F3 /* TaskListViewController.swift in Sources */,
 				AEB5DF6A2B223FA00099E9B0 /* StyleManager.swift in Sources */,
 				AEF0E5362B0690E80081A6F3 /* SettingsViewController.swift in Sources */,
@@ -332,7 +352,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TaskMate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -340,6 +362,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = skidmore.TaskMate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -350,7 +373,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TaskMate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -358,6 +383,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = skidmore.TaskMate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

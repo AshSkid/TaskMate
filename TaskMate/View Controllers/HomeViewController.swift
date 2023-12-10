@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
         super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(open_settings))
         super.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(create_task_list))
         
-        TaskList.setup_lists()
+//        TaskList.setup_lists()
     }
     
     @objc func open_settings(){
@@ -131,6 +131,38 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if indexPath.row > 4 {
+            let permanently_delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
+                
+                let alert = UIAlertController(title: "Permanently Delete Task List?", message: "Are you sure you want to permanently delete \(TaskList.lists[indexPath.row - 1].title)?", preferredStyle: UIAlertController.Style.alert)
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { (_) -> Void in
+//                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
+//
+//                    TaskList.lists[TaskList.deleted_index].remove_task(uuid)
+//                    Task.tasks.removeValue(forKey: uuid)
+                    
+                    print("delete")
+                    
+                    self.table_view.reloadData()
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                
+                completionHandler(true)
+            }
+            
+            permanently_delete.image = UIImage(systemName: "trash")
+            permanently_delete.backgroundColor = .red
+            
+            let swipe = UISwipeActionsConfiguration(actions: [permanently_delete])
+            return swipe
+        } else {
+            return nil
+        }
+    }
     
     
     
