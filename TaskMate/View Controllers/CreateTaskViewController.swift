@@ -114,11 +114,13 @@ class CreateTaskViewController: UIViewController {
             let date: Date = self.date_picker.date
             
             if self.mode == .create {
-                let new_task_uuid: UUID = Task.create_task(task_name, task_list_uuid, date)
-                TaskList.lists_map[task_list_uuid]!.tasks.append(new_task_uuid)
+                _ = Task.create_task(task_name, task_list_uuid, date)
+                
             }else{
                 Task.tasks[self.task_uuid!]!.name = task_name
                 Task.tasks[self.task_uuid!]!.due_date = date
+                
+                CoreDataManager.update_task(&Task.tasks[self.task_uuid!]!)
             }
             
             

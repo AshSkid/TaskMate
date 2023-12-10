@@ -34,15 +34,26 @@ struct Task{
     
     static var tasks: [UUID : Task] = [:]
     
+    
+    static func add_task(_ title: String, _ uuid: UUID, _ originating_list: UUID, _ due: Date) -> Void {
+        Task.tasks[uuid] = Task(title, uuid, originating_list, due)
+        TaskList.lists_map[TaskList.all_uuid]!.tasks.append(uuid)
+        
+    }
+    
     static func create_task(_ title: String, _ originating_list: UUID, _ due: Date) -> UUID {
         let uuid = UUID()
+    
+        Task.add_task(title, uuid, originating_list, due)
+        TaskList.lists_map[originating_list]!.tasks.append(uuid)
         
-        tasks[uuid] = Task(title, uuid, originating_list, due)
-        
-        TaskList.lists_map[TaskList.all_uuid]!.tasks.append(uuid)
+        CoreDataManager.create_task(&Task.tasks[uuid]!)
         
         return uuid
     }
+
+    
+    
     
     static func delete_task(_ uuid: UUID, permanently: Bool = false) -> Void {
         let originating_list_uuid: UUID = Task.tasks[uuid]!.home_list
@@ -62,9 +73,11 @@ struct Task{
         if permanently == false {
             // add to Deleted
             TaskList.lists_map[TaskList.deleted_uuid]!.tasks.append(uuid)
+            CoreDataManager.update_task(&Task.tasks[uuid]!)
             
         } else {
             Task.tasks.removeValue(forKey: uuid)
+            CoreDataManager.delete_task(uuid)
         }
     }
     
@@ -75,10 +88,12 @@ struct Task{
         // add to all
         TaskList.lists_map[TaskList.all_uuid]!.tasks.append(uuid)
         
-        Task.tasks[uuid]!.is_deleted = true
+        Task.tasks[uuid]!.is_deleted = false
         
         // remove to Deleted
         TaskList.lists_map[TaskList.deleted_uuid]!.remove_task(uuid)
+        
+        CoreDataManager.update_task(&Task.tasks[uuid]!)
     }
     
 }
@@ -119,10 +134,8 @@ struct TaskList{
     
     
     
-    func toggle_task_in_today(_ task_index: Int) -> Void {
-        let task_uuid: UUID = self.tasks[task_index]
-
-        
+    
+    static func toggle_task_in_today(_ task_uuid: UUID) -> Void {
         let task_currently_in_today: Bool = Task.tasks[task_uuid]!.is_in_today
         
         Task.tasks[task_uuid]!.is_in_today = !task_currently_in_today
@@ -135,6 +148,13 @@ struct TaskList{
             // add to today list
             TaskList.lists_map[TaskList.today_uuid]!.tasks.append(task_uuid)
         }
+        
+        CoreDataManager.update_task(&Task.tasks[task_uuid]!)
+    }
+    
+    func toggle_task_in_today(_ task_index: Int) -> Void {
+        let task_uuid: UUID = self.tasks[task_index]
+        TaskList.toggle_task_in_today(task_uuid)
     }
     
     

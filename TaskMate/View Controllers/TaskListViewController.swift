@@ -205,6 +205,8 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                     TaskList.lists_map[TaskList.deleted_uuid]!.remove_task(uuid)
                     Task.tasks.removeValue(forKey: uuid)
                     
+                    CoreDataManager.delete_task(uuid)
+                    
                     self.table_view.reloadData()
                 }))
                 

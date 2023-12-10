@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H15" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="TaskCoreData" representedClassName="TaskCoreData" syncable="YES">
+        <attribute name="due_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="home_list" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="is_completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="is_deleted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="is_in_today" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
     <entity name="TaskListCoreData" representedClassName="TaskListCoreData" syncable="YES">
         <attribute name="color_b" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="color_g" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -9,5 +18,6 @@
     </entity>
     <elements>
         <element name="TaskListCoreData" positionX="-54" positionY="-9" width="128" height="118"/>
+        <element name="TaskCoreData" positionX="-9" positionY="72" width="128" height="148"/>
     </elements>
 </model>
