@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        super.view.backgroundColor = .systemTeal
+        super.view.backgroundColor = StyleManager.Theme.fill()
         super.navigationItem.title = "Home"
         
         self.safe_area = super.view.layoutMarginsGuide
@@ -45,7 +45,10 @@ class HomeViewController: UIViewController {
         
     func setup_table_view(){
         super.view.addSubview(self.table_view)
-
+        
+        self.table_view.separatorStyle = UITableViewCell.SeparatorStyle.none
+        self.table_view.backgroundColor = StyleManager.Theme.background()
+        
         self.table_view.translatesAutoresizingMaskIntoConstraints = false
 
         self.table_view.topAnchor.constraint(equalTo: self.safe_area.topAnchor).isActive = true
@@ -57,8 +60,6 @@ class HomeViewController: UIViewController {
 
         self.table_view.dataSource = self
         self.table_view.delegate = self
-        
-        self.table_view.separatorStyle = UITableViewCell.SeparatorStyle.none
     }
     
     
@@ -88,10 +89,11 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.backgroundColor = StyleManager.Theme.background()
         
         if indexPath.row == 4 {
-            let line = UIView(frame: CGRect(x: 0, y: 0, width: StyleManager.screen_width(), height: 1))
-            line.backgroundColor = StyleManager.Theme.text()
+            let line = UIView(frame: CGRect(x: 0, y: StyleManager.row_padding_height(), width: StyleManager.screen_width(), height: 1))
+            line.backgroundColor = StyleManager.Theme.text_2()
             cell.addSubview(line)
             return cell
         }
@@ -111,9 +113,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         let button = UIButton()
         button.setTitle(task_list.title, for: .normal)
         cell.addSubview(button)
-        button.backgroundColor = .systemGray3
+        button.backgroundColor = StyleManager.Theme.fill()
         button.setTitleColor(task_list.color, for: .normal)
-        button.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+        button.frame = StyleManager.get_default_row_frame()
+        button.layer.cornerRadius = StyleManager.corner_radius()
         button.addTarget(self, action: #selector(self.clicked_task_list(sender:)), for: .touchUpInside)
         button.tag = indexPath.row
         
@@ -125,10 +128,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 4 {
-            return 10
+            return StyleManager.row_padding_height() * 2
         }
         
-        return 40
+        return StyleManager.row_height() + 2*StyleManager.row_padding_height()
     }
     
     
@@ -151,7 +154,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             
             permanently_delete.image = UIImage(systemName: "trash")
-            permanently_delete.backgroundColor = .red
+            permanently_delete.backgroundColor = StyleManager.Theme.red()
             
             let swipe = UISwipeActionsConfiguration(actions: [permanently_delete])
             return swipe

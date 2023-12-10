@@ -13,6 +13,9 @@ class TaskListViewController: UIViewController {
     var safe_area: UILayoutGuide!
     var task_list_index: Int!
     
+    var add_task_button: UIButton?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,28 +29,52 @@ class TaskListViewController: UIViewController {
         self.task_list_index = task_index
         
         super.navigationItem.title = task_list.title
-        super.view.backgroundColor = task_list.color
+        super.view.backgroundColor = StyleManager.Theme.fill()
         
-    
-        super.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(open_task_list_settings))
+        // set title bar color
+        let appearance = UINavigationBarAppearance()
+        appearance.titleTextAttributes = [.foregroundColor: task_list.color]
+        appearance.largeTitleTextAttributes = [.foregroundColor: task_list.color]
         
+        super.navigationItem.standardAppearance = appearance
+        super.navigationItem.scrollEdgeAppearance = appearance
+        
+        
+        super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(self.go_back_home))
+        super.navigationItem.leftBarButtonItem!.image = UIImage(systemName: "arrow.backward")
+        super.navigationItem.leftBarButtonItem!.tintColor = StyleManager.Theme.text_2()
         
         if task_list.can_add_tasks {
-            let button = UIButton()
-            button.setTitle("Create", for: .normal)
-            self.view.addSubview(button)
-            button.backgroundColor = .systemGray3
-            button.setTitleColor(.white, for: .normal)
-            button.frame = CGRect(x: 100, y: 400, width: 200, height: 45)
-            button.addTarget(self, action: #selector(self.create_task), for: .touchUpInside)
+            if task_list.uuid != TaskList.misc_uuid {
+                super.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(self.open_task_list_settings))
+                super.navigationItem.rightBarButtonItem!.image = UIImage(systemName: "line.horizontal.3")
+                super.navigationItem.rightBarButtonItem!.tintColor = task_list.color
+            }
+            
+            self.add_task_button = UIButton()
+            self.view.addSubview(self.add_task_button!)
+            self.add_task_button!.setTitle("+ Add Task...", for: .normal)
+            self.add_task_button!.setTitleColor(task_list.color, for: .normal)
+            self.add_task_button!.backgroundColor = StyleManager.Theme.fill()
+            self.add_task_button!.frame = CGRect(x: 0, y: StyleManager.screen_height() - StyleManager.row_height(), width: StyleManager.screen_width(), height: StyleManager.row_height())
+            self.add_task_button!.addTarget(self, action: #selector(self.create_task), for: .touchUpInside)
         }
         
+    }
+    
+    
+    @objc private func go_back_home(){
+//        super.dismiss(animated: true, completion: nil)
+        super.navigationController?.popViewController(animated: true)
     }
     
     
     func setup_table_view(){
         super.view.addSubview(self.table_view)
 
+        self.table_view.separatorStyle = UITableViewCell.SeparatorStyle.none
+        self.table_view.backgroundColor = StyleManager.Theme.background()
+        
         self.table_view.translatesAutoresizingMaskIntoConstraints = false
 
         self.table_view.topAnchor.constraint(equalTo: self.safe_area.topAnchor).isActive = true
@@ -59,8 +86,6 @@ class TaskListViewController: UIViewController {
 
         self.table_view.dataSource = self
         self.table_view.delegate = self
-        
-        self.table_view.separatorStyle = UITableViewCell.SeparatorStyle.none
     }
 
 
@@ -73,7 +98,20 @@ class TaskListViewController: UIViewController {
         let task_list: TaskList = TaskList.lists_map[task_list_uuid]!
         
         super.navigationItem.title = task_list.title
-        super.view.backgroundColor = task_list.color
+        if task_list.can_add_tasks {
+            self.add_task_button!.setTitleColor(task_list.color, for: .normal)
+        }
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.titleTextAttributes = [.foregroundColor: task_list.color]
+        appearance.largeTitleTextAttributes = [.foregroundColor: task_list.color]
+        
+        super.navigationItem.standardAppearance = appearance
+        super.navigationItem.scrollEdgeAppearance = appearance
+        
+        if task_list.can_add_tasks && task_list_uuid != TaskList.misc_uuid{
+            super.navigationItem.rightBarButtonItem!.tintColor = task_list.color
+        }
     }
     
     // handle rotate
@@ -117,7 +155,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return StyleManager.row_height()
+        return StyleManager.row_height() + 2*StyleManager.row_padding_height()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -126,6 +164,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let task_list: TaskList = TaskList.lists_map[task_list_uuid]!
         let task_uuid: UUID = task_list.tasks[indexPath.row]
         
+        cell.backgroundColor = StyleManager.Theme.background()
         
         let background = UIView(frame: StyleManager.get_default_row_frame())
         background.backgroundColor = StyleManager.Theme.fill()
@@ -144,7 +183,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
 
         background.addSubview(button)
 //        button.backgroundColor = StyleManager.Theme.fill()
-        button.frame = CGRect(x: 2*StyleManager.row_padding_width(), y: 10, width: 20, height: 20)
+        button.frame = CGRect(x: StyleManager.row_padding_width(), y: 10, width: 20, height: 20)
         button.addTarget(self, action: #selector(self.toggle_task_completd(sender:)), for: .touchUpInside)
         button.tag = indexPath.row
 
@@ -152,26 +191,52 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let label = UILabel()
         label.text = Task.tasks[task_uuid]!.name
         background.addSubview(label)
-        label.frame = CGRect(x: 3*StyleManager.row_padding_width() + 20, y: 0, width: StyleManager.screen_width(), height: StyleManager.row_height())
-        label.textColor = .white
+        label.frame = CGRect(x: 2*StyleManager.row_padding_width() + 20, y: 0, width: StyleManager.screen_width(), height: StyleManager.row_height())
+        label.textColor = task_list.color
         label.textAlignment = .justified
-
-        let date_formatter = DateFormatter()
-        date_formatter.dateStyle = .short
-        date_formatter.timeStyle = .short
-        let formatted_date: String = date_formatter.string(from: Task.tasks[task_uuid]!.due_date)
-
-        let date = UILabel()
-        date.text = formatted_date
-        background.addSubview(date)
-        date.frame = CGRect(x: 120, y: 0, width: 200, height: 40)
-        if Task.tasks[task_uuid]!.due_date < Date() {
-            date.textColor = .red
-        }else{
-            date.textColor = .white
+        
+        if Task.tasks[task_uuid]!.is_in_today {
+            let sun_image = UIImageView(frame: CGRect(x: label.frame.origin.x - 5, y: 10, width: 20, height: 20))
+            background.addSubview(sun_image)
+            sun_image.image = UIImage(systemName: "sun.max")
+            sun_image.tintColor = StyleManager.Theme.text_2()
+            
+            label.frame.origin.x += 20
         }
 
-        date.textAlignment = .justified
+        
+        let task_date: Date = Task.tasks[task_uuid]!.due_date
+        
+        let date_formatter = DateFormatter()
+        date_formatter.setLocalizedDateFormatFromTemplate("MMM, d")
+        let formatted_date: String = date_formatter.string(from: task_date)
+
+        let date = UILabel()
+        background.addSubview(date)
+        date.frame = CGRect(x: StyleManager.row_padding_width(), y: 0, width: StyleManager.screen_width() - 4*StyleManager.row_padding_width(), height: StyleManager.row_height())
+        
+        
+        if Calendar.current.isDateInToday(task_date) {
+            date.text = "Today"
+            date.textColor = StyleManager.Theme.text_2()
+            
+        }else if Calendar.current.isDateInYesterday(task_date) {
+            date.text = "Yesterday"
+            date.textColor = StyleManager.Theme.red()
+            
+        }else if Calendar.current.isDateInTomorrow(task_date) {
+            date.text = "Tomorrow"
+            date.textColor = StyleManager.Theme.text_2()
+            
+        } else if task_date < Date() {
+            date.text = formatted_date
+            date.textColor = StyleManager.Theme.red()
+        }else{
+            date.text = formatted_date
+            date.textColor = StyleManager.Theme.text_2()
+        }
+
+        date.textAlignment = .right
     
         return cell
     }
@@ -186,6 +251,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         
         self.table_view.reloadData()
     }
+    
     
     
 
@@ -216,7 +282,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
             }
             
             permanently_delete.image = UIImage(systemName: "trash")
-            permanently_delete.backgroundColor = .red
+            permanently_delete.backgroundColor = StyleManager.Theme.red()
             
             let swipe = UISwipeActionsConfiguration(actions: [permanently_delete])
             return swipe
@@ -242,7 +308,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
             }
             
             delete.image = UIImage(systemName: "trash")
-            delete.backgroundColor = .red
+            delete.backgroundColor = StyleManager.Theme.red()
             
             let swipe = UISwipeActionsConfiguration(actions: [delete])
             return swipe
@@ -275,7 +341,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
             }
             
             restore.image = UIImage(systemName: "arrow.backward.circle")
-            restore.backgroundColor = .blue
+            restore.backgroundColor = StyleManager.Theme.restore()
             
             let swipe = UISwipeActionsConfiguration(actions: [restore])
             return swipe
@@ -288,9 +354,9 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                 
                 completionHandler(true)
                 
-                if self.task_list_index == TaskList.today_index {
+//                if self.task_list_index == TaskList.today_index {
                     self.table_view.reloadData()
-                }
+//                }
             }
             
             let task_list_uuid: UUID = TaskList.lists_arr[self.task_list_index]
@@ -303,7 +369,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
                 add_to_today.image = UIImage(systemName: "sunrise.fill")
             }
             
-            add_to_today.backgroundColor = .orange
+            add_to_today.backgroundColor = StyleManager.Theme.today()
             
             let swipe = UISwipeActionsConfiguration(actions: [add_to_today])
             return swipe

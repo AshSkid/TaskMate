@@ -106,13 +106,13 @@ struct TaskList{
     static var lists_arr: [UUID] = []
     
     static let today_index: Int = 0
-    static let misc_index: Int = 1
-    static let all_index: Int = 2
+    static let all_index: Int = 1
+    static let misc_index: Int = 2
     static let deleted_index: Int = 3
     
     static let today_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
-    static let misc_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
-    static let all_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
+    static let all_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
+    static let misc_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
     static let deleted_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
     
     
@@ -171,14 +171,14 @@ struct TaskList{
     static func setup_lists(){
 //        TaskList.lists.removeAll()
         
-        TaskList.lists_map[today_uuid] = (TaskList.init("Today", .orange, today_uuid, false))
-        TaskList.lists_map[misc_uuid] = (TaskList.init("Misc Tasks", .gray, misc_uuid, true))
-        TaskList.lists_map[all_uuid] = (TaskList.init("All", .green, all_uuid, false))
-        TaskList.lists_map[deleted_uuid] = (TaskList.init("Deleted", .red, deleted_uuid, false))
+        TaskList.lists_map[today_uuid] = (TaskList.init("Today", StyleManager.Theme.today(), today_uuid, false))
+        TaskList.lists_map[all_uuid] = (TaskList.init("All", StyleManager.Theme.all(), all_uuid, false))
+        TaskList.lists_map[misc_uuid] = (TaskList.init("Misc Tasks", StyleManager.Theme.text_2(), misc_uuid, true))
+        TaskList.lists_map[deleted_uuid] = (TaskList.init("Deleted", StyleManager.Theme.red(), deleted_uuid, false))
         
         TaskList.lists_arr.append(today_uuid)
-        TaskList.lists_arr.append(misc_uuid)
         TaskList.lists_arr.append(all_uuid)
+        TaskList.lists_arr.append(misc_uuid)
         TaskList.lists_arr.append(deleted_uuid)
     }
     
