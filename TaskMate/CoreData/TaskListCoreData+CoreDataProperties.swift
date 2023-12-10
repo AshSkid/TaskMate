@@ -15,7 +15,8 @@ extension TaskListCoreData {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<TaskListCoreData> {
         return NSFetchRequest<TaskListCoreData>(entityName: "TaskListCoreData")
     }
-
+    
+    @NSManaged public var uuid: UUID
     @NSManaged public var name: String?
     @NSManaged public var color_r: Float
     @NSManaged public var color_g: Float

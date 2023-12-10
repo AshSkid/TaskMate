@@ -16,11 +16,11 @@ class CreateListViewController: UIViewController {
         case edit
     }
     var mode: Mode = .create
-    var task_list_index: Int?
+    var task_list_uuid: UUID?
     
     // only call this one if editing (not needed for create mode)
-    func setup(_ list_index: Int) -> Void {
-        self.task_list_index = list_index
+    func setup(_ list_uuid: UUID) -> Void {
+        self.task_list_uuid = list_uuid
         self.mode = .edit
     }
     
@@ -56,7 +56,7 @@ class CreateListViewController: UIViewController {
         self.view.addSubview(self.name_text_field)
         
         if self.mode == .edit {
-            self.name_text_field.text = TaskList.lists[self.task_list_index!].title
+            self.name_text_field.text = TaskList.lists_map[self.task_list_uuid!]!.title
         }
         
         
@@ -118,9 +118,12 @@ class CreateListViewController: UIViewController {
             if self.mode == .create {
                 CreateListViewController.just_created = true
                 TaskList.create_new_list(list_name, list_color)
+                
             } else {
-                TaskList.lists[self.task_list_index!].title = list_name
-                TaskList.lists[self.task_list_index!].color = list_color
+                TaskList.lists_map[self.task_list_uuid!]!.title = list_name
+                TaskList.lists_map[self.task_list_uuid!]!.color = list_color
+                
+                CoreDataManager.update_task_list(list_name, self.task_list_uuid!, list_color)
             }
             
             self.dismiss_self()

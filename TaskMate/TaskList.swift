@@ -14,12 +14,12 @@ struct Task{
     var name: String
     var is_in_today: Bool = false
     var uuid: UUID
-    var home_list: Int // list this task lives in
+    var home_list: UUID // list this task lives in
     var is_deleted: Bool = false
     var is_completed: Bool = false
     var due_date: Date
     
-    init(_ title: String, _ id: UUID, _ originating_list: Int, _ due: Date){
+    init(_ title: String, _ id: UUID, _ originating_list: UUID, _ due: Date){
         self.name = title
         self.uuid = id
         self.home_list = originating_list
@@ -34,46 +34,51 @@ struct Task{
     
     static var tasks: [UUID : Task] = [:]
     
-    static func create_task(_ title: String, _ originating_list: Int, _ due: Date) -> UUID {
+    static func create_task(_ title: String, _ originating_list: UUID, _ due: Date) -> UUID {
         let uuid = UUID()
         
         tasks[uuid] = Task(title, uuid, originating_list, due)
         
-        TaskList.lists[TaskList.all_index].tasks.append(uuid)
+        TaskList.lists_map[TaskList.all_uuid]!.tasks.append(uuid)
         
         return uuid
     }
     
-    static func delete_task(_ uuid: UUID) -> Void {
-        let originating_list_index: Int = Task.tasks[uuid]!.home_list
-        TaskList.lists[originating_list_index].remove_task(uuid)
+    static func delete_task(_ uuid: UUID, permanently: Bool = false) -> Void {
+        let originating_list_uuid: UUID = Task.tasks[uuid]!.home_list
+        TaskList.lists_map[originating_list_uuid]!.remove_task(uuid)
         
         // remove from All
-        TaskList.lists[TaskList.all_index].remove_task(uuid)
+        TaskList.lists_map[TaskList.all_uuid]!.remove_task(uuid)
         
         // if necesary, remove from Today
         if Task.tasks[uuid]!.is_in_today {
-            TaskList.lists[TaskList.today_index].remove_task(uuid)
+            TaskList.lists_map[TaskList.today_uuid]!.remove_task(uuid)
             Task.tasks[uuid]!.is_in_today = false
         }
         
         Task.tasks[uuid]!.is_deleted = true
         
-        // add to Deleted
-        TaskList.lists[TaskList.deleted_index].tasks.append(uuid)
+        if permanently == false {
+            // add to Deleted
+            TaskList.lists_map[TaskList.deleted_uuid]!.tasks.append(uuid)
+            
+        } else {
+            Task.tasks.removeValue(forKey: uuid)
+        }
     }
     
     static func restore_task(_ uuid: UUID) -> Void {
-        let originating_list_index: Int = Task.tasks[uuid]!.home_list
-        TaskList.lists[originating_list_index].tasks.append(uuid)
+        let originating_list_uuid: UUID = Task.tasks[uuid]!.home_list
+        TaskList.lists_map[originating_list_uuid]!.tasks.append(uuid)
         
         // add to all
-        TaskList.lists[TaskList.all_index].tasks.append(uuid)
+        TaskList.lists_map[TaskList.all_uuid]!.tasks.append(uuid)
         
         Task.tasks[uuid]!.is_deleted = true
         
         // remove to Deleted
-        TaskList.lists[TaskList.deleted_index].remove_task(uuid)
+        TaskList.lists_map[TaskList.deleted_uuid]!.remove_task(uuid)
     }
     
 }
@@ -82,13 +87,18 @@ struct Task{
 
 
 struct TaskList{
-    static var list_map: [UUID : TaskList] = [:]
-    static var lists: [TaskList] = []
+    static var lists_map: [UUID : TaskList] = [:]
+    static var lists_arr: [UUID] = []
     
-    static let today_index = 0
-    static let misc_index = 1
-    static let all_index = 2
-    static let deleted_index = 3
+    static let today_index: Int = 0
+    static let misc_index: Int = 1
+    static let all_index: Int = 2
+    static let deleted_index: Int = 3
+    
+    static let today_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+    static let misc_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
+    static let all_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
+    static let deleted_uuid: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
     
     
     
@@ -111,6 +121,7 @@ struct TaskList{
     
     func toggle_task_in_today(_ task_index: Int) -> Void {
         let task_uuid: UUID = self.tasks[task_index]
+
         
         let task_currently_in_today: Bool = Task.tasks[task_uuid]!.is_in_today
         
@@ -118,11 +129,11 @@ struct TaskList{
         
         if task_currently_in_today {
             // remove from today list
-            TaskList.lists[TaskList.today_index].remove_task(task_uuid)
+            TaskList.lists_map[TaskList.today_uuid]!.remove_task(task_uuid)
             
         } else {
             // add to today list
-            TaskList.lists[TaskList.today_index].tasks.append(task_uuid)
+            TaskList.lists_map[TaskList.today_uuid]!.tasks.append(task_uuid)
         }
     }
     
@@ -140,20 +151,44 @@ struct TaskList{
     static func setup_lists(){
 //        TaskList.lists.removeAll()
         
-        TaskList.lists.append(TaskList.init("Today", .orange, UUID(uuidString: "00000000-0000-0000-0000-000000000000")!, false))
-        TaskList.lists.append(TaskList.init("Misc Tasks", .gray, UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, true))
-        TaskList.lists.append(TaskList.init("All", .green, UUID(uuidString: "00000000-0000-0000-0000-000000000002")!, false))
-        TaskList.lists.append(TaskList.init("Deleted", .red, UUID(uuidString: "00000000-0000-0000-0000-000000000003")!, false))
+        TaskList.lists_map[today_uuid] = (TaskList.init("Today", .orange, today_uuid, false))
+        TaskList.lists_map[misc_uuid] = (TaskList.init("Misc Tasks", .gray, misc_uuid, true))
+        TaskList.lists_map[all_uuid] = (TaskList.init("All", .green, all_uuid, false))
+        TaskList.lists_map[deleted_uuid] = (TaskList.init("Deleted", .red, deleted_uuid, false))
+        
+        TaskList.lists_arr.append(today_uuid)
+        TaskList.lists_arr.append(misc_uuid)
+        TaskList.lists_arr.append(all_uuid)
+        TaskList.lists_arr.append(deleted_uuid)
     }
     
     
-    static func add_list(_ title: String, _ color: UIColor){
-        TaskList.lists.append(TaskList.init(title, color, UUID(), true))
+    static func add_list(_ title: String, _ uuid: UUID, _ color: UIColor){
+        TaskList.lists_map[uuid] = TaskList.init(title, color, uuid, true)
+        TaskList.lists_arr.append(uuid)
     }
     
     static func create_new_list(_ title: String, _ color: UIColor){
-        TaskList.add_list(title, color)
-        CoreDataManager.create_task_list(title, color)
+        let new_uuid = UUID()
+        TaskList.add_list(title, new_uuid, color)
+        CoreDataManager.create_task_list(title, new_uuid, color)
+    }
+    
+    
+    static func delete_list(_ uuid: UUID) -> Void {
+        for task in TaskList.lists_map[uuid]!.tasks {
+            Task.delete_task(task, permanently: true)
+        }
+        
+        TaskList.lists_map.removeValue(forKey: uuid)
+        for i in 0..<TaskList.lists_arr.count {
+            if TaskList.lists_arr[i] == uuid {
+                TaskList.lists_arr.remove(at: i)
+                break
+            }
+        }
+        
+        CoreDataManager.delete_task_list(uuid)
     }
     
 }

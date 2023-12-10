@@ -5,8 +5,9 @@
         <attribute name="color_g" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="color_r" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
     </entity>
     <elements>
-        <element name="TaskListCoreData" positionX="-54" positionY="-9" width="128" height="103"/>
+        <element name="TaskListCoreData" positionX="-54" positionY="-9" width="128" height="118"/>
     </elements>
 </model>

@@ -74,7 +74,7 @@ class HomeViewController: UIViewController {
         
         if CreateListViewController.just_created {
             CreateListViewController.just_created = false
-            self.open_task_list(TaskList.lists.count - 1)
+            self.open_task_list(TaskList.lists_arr.count - 1)
         }
     }
 }
@@ -83,7 +83,7 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return TaskList.lists.count + 1
+        return TaskList.lists_arr.count + 1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -96,7 +96,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         }
         
-        let task_index: Int = {
+        let task_list_index: Int = {
             if indexPath.row < 4 {
                 return indexPath.row
             }else{
@@ -104,7 +104,8 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }()
         
-        let task_list = TaskList.lists[task_index]
+        let task_list_uuid: UUID = TaskList.lists_arr[task_list_index]
+        let task_list: TaskList = TaskList.lists_map[task_list_uuid]!
         
         
         let button = UIButton()
@@ -134,17 +135,12 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.row > 4 {
             let permanently_delete = UIContextualAction(style: .normal, title: "Delete"){ (action, view, completionHandler) in
-                
-                let alert = UIAlertController(title: "Permanently Delete Task List?", message: "Are you sure you want to permanently delete \(TaskList.lists[indexPath.row - 1].title)?", preferredStyle: UIAlertController.Style.alert)
+                let list_uuid: UUID = TaskList.lists_arr[indexPath.row - 1]
+                let alert = UIAlertController(title: "Permanently Delete Task List?", message: "Are you sure you want to permanently delete \(TaskList.lists_map[list_uuid]!.title)?", preferredStyle: UIAlertController.Style.alert)
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { (_) -> Void in
-//                    let uuid: String = TaskList.lists[self.task_list_index].tasks[indexPath.row]
-//
-//                    TaskList.lists[TaskList.deleted_index].remove_task(uuid)
-//                    Task.tasks.removeValue(forKey: uuid)
-                    
-                    print("delete")
+                    TaskList.delete_list(list_uuid)
                     
                     self.table_view.reloadData()
                 }))

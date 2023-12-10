@@ -22,16 +22,16 @@ struct CoreDataManager {
             
             for list in task_lists {
                 let color: UIColor = UIColor(red: CGFloat(list.color_r), green: CGFloat(list.color_g), blue: CGFloat(list.color_b), alpha: 1.0)
-                TaskList.add_list(list.name!, color)
+                TaskList.add_list(list.name!, list.uuid, color)
             }
             
         } catch {
-            
+            print("error getting task lists from CoreData (initial setup)")
         }
     }
     
     
-    static func create_task_list(_ name: String, _ color: UIColor) -> Void {
+    static func create_task_list(_ name: String, _ uuid: UUID, _ color: UIColor) -> Void {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
@@ -40,6 +40,7 @@ struct CoreDataManager {
         color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         
         let task_list = TaskListCoreData(context: CoreDataManager.context!)
+        task_list.uuid = uuid
         task_list.name = name
         task_list.color_r = Float(red)
         task_list.color_g = Float(green)
@@ -49,11 +50,55 @@ struct CoreDataManager {
         do {
             try CoreDataManager.context!.save()
         } catch {
-            
+            print("error creating task lists from CoreData")
         }
     }
     
     
+    static func update_task_list(_ name: String, _ uuid: UUID, _ color: UIColor) -> Void {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        do {
+            let task_lists: [TaskListCoreData] = try CoreDataManager.context!.fetch(TaskListCoreData.fetchRequest())
+            
+            for list in task_lists {
+                if list.uuid == uuid {
+                    list.name = name
+                    list.color_r = Float(red)
+                    list.color_g = Float(green)
+                    list.color_b = Float(blue)
+                    break
+                }
+            }
+            
+            try CoreDataManager.context!.save()
+            
+        } catch {
+            print("error updating task list from CoreData")
+        }
+    }
+    
+    
+    static func delete_task_list(_ uuid: UUID) -> Void {
+        do {
+            let task_lists: [TaskListCoreData] = try CoreDataManager.context!.fetch(TaskListCoreData.fetchRequest())
+            
+            for list in task_lists {
+                if list.uuid == uuid {
+                    CoreDataManager.delete_task_list(list)
+                    break
+                }
+            }
+            
+        } catch {
+            print("error getting task lists from CoreData")
+        }
+    }
     
     static private func delete_task_list(_ item: TaskListCoreData){
         CoreDataManager.context!.delete(item)
@@ -62,7 +107,7 @@ struct CoreDataManager {
             try CoreDataManager.context!.save()
             
         } catch {
-            
+            print("error deleting task lists from CoreData")
         }
     }
     

@@ -18,7 +18,7 @@ class CreateTaskViewController: UIViewController {
     var task_uuid: UUID? // only used if mode is .edit
         
     
-    var task_list_index: Int!
+    var task_list_uuid: UUID!
     var name_text_field: UITextField = {
         var text_field: UITextField = UITextField(frame: CGRect(x: 100, y: 100, width: 200, height: 30));
         text_field.backgroundColor = .systemGray3
@@ -49,13 +49,13 @@ class CreateTaskViewController: UIViewController {
     
     
     
-    func setup(_ list_index: Int){
-        self.task_list_index = list_index
+    func setup(_ list_uuid: UUID){
+        self.task_list_uuid = list_uuid
         self.mode = .create
     }
     
-    func setup(_ list_index: Int, _ task_to_edit: UUID){
-        self.task_list_index = list_index
+    func setup(_ list_uuid: UUID, _ task_to_edit: UUID){
+        self.task_list_uuid = list_uuid
         self.mode = .edit
         self.task_uuid = task_to_edit
     }
@@ -114,8 +114,8 @@ class CreateTaskViewController: UIViewController {
             let date: Date = self.date_picker.date
             
             if self.mode == .create {
-                let new_task_uuid: UUID = Task.create_task(task_name, self.task_list_index, date)
-                TaskList.lists[self.task_list_index!].tasks.append(new_task_uuid)
+                let new_task_uuid: UUID = Task.create_task(task_name, task_list_uuid, date)
+                TaskList.lists_map[task_list_uuid]!.tasks.append(new_task_uuid)
             }else{
                 Task.tasks[self.task_uuid!]!.name = task_name
                 Task.tasks[self.task_uuid!]!.due_date = date
