@@ -14,6 +14,10 @@ struct StyleManager{
     static func row_height() -> CGFloat { return 40 }
     static func corner_radius() -> CGFloat { return 10 }
     
+    
+//    I couldn't find a proper way to do this, so this is just the value I got from testing
+    static func window_top_padding() -> CGFloat { return 50 }
+    
     static func screen_width() -> CGFloat {
         let screen = UIScreen.main.bounds
         return screen.size.width

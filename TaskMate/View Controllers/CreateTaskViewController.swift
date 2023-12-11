@@ -42,6 +42,7 @@ class CreateTaskViewController: UIViewController {
     var date_picker: UIDatePicker = {
         var picker = UIDatePicker(frame: CGRect(x: 100, y: 200, width: 200, height: 30))
         picker.preferredDatePickerStyle = .compact
+        picker.datePickerMode = .date
         
         return picker
     }()

@@ -27,11 +27,23 @@ class CreateListViewController: UIViewController {
     
     
     var name_text_field: UITextField = {
-        var text_field: UITextField = UITextField(frame: CGRect(x: 100, y: 100, width: 200, height: 30));
-        text_field.backgroundColor = .systemGray3
+        var text_field: UITextField = UITextField(frame: StyleManager.get_default_row_frame());
+        text_field.frame.origin.y += StyleManager.window_top_padding() + 6*StyleManager.row_padding_height()
+        text_field.backgroundColor = StyleManager.Theme.fill()
         text_field.placeholder = "Task List Name"
+        text_field.layer.cornerRadius = StyleManager.corner_radius()
         
         return text_field
+    }()
+    
+    var color_button: UIButton = {
+        let button = UIButton(frame: StyleManager.get_default_row_frame())
+        button.frame.origin.y += StyleManager.window_top_padding() + 13*StyleManager.row_padding_height() + StyleManager.row_height()
+        
+        button.backgroundColor = StyleManager.Theme.fill()
+        button.layer.cornerRadius = StyleManager.corner_radius()
+        
+        return button
     }()
     
     var color_picker: UIColorPickerViewController = {
@@ -48,25 +60,71 @@ class CreateListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        super.view.backgroundColor = .systemBackground
-        super.navigationItem.title = "Create List"
+        super.view.backgroundColor = StyleManager.Theme.background()
+        
+        if self.mode == .create {
+            super.navigationItem.title = "Create Task List"
+        } else {
+            super.navigationItem.title = "Task List Settings"
+        }
         
         super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.dismiss_self))
+        super.navigationItem.leftBarButtonItem!.tintColor = StyleManager.Theme.text_2()
         
-        self.view.addSubview(self.name_text_field)
+        
+        let name_text_label = UILabel(frame: CGRect(
+            x: StyleManager.row_padding_width(),
+            y: StyleManager.window_top_padding() + 2*StyleManager.row_padding_height(),
+            width: StyleManager.screen_width(),
+            height: StyleManager.row_height()
+        ))
+        super.view.addSubview(name_text_label)
+        name_text_label.text = "Name:"
+        name_text_label.textColor = StyleManager.Theme.text()
+        
+        super.view.addSubview(self.name_text_field)
         
         if self.mode == .edit {
             self.name_text_field.text = TaskList.lists_map[self.task_list_uuid!]!.title
         }
         
         
-        let color_button = UIButton()
-        color_button.setTitle("Color", for: .normal)
-        super.view.addSubview(color_button)
-        color_button.backgroundColor = .systemGray3
-        color_button.setTitleColor(.white, for: .normal)
-        color_button.frame = CGRect(x: 100, y: 200, width: 200, height: 45)
-        color_button.addTarget(self, action: #selector(self.open_color_picker), for: .touchUpInside)
+        
+        
+        let color_text_label = UILabel(frame: CGRect(
+            x: StyleManager.row_padding_width(),
+            y: StyleManager.window_top_padding() + 9*StyleManager.row_padding_height() + StyleManager.row_height(),
+            width: StyleManager.screen_width(),
+            height: StyleManager.row_height()
+        ))
+        super.view.addSubview(color_text_label)
+        color_text_label.text = "Color:"
+        color_text_label.textColor = StyleManager.Theme.text()
+        
+        
+        
+        super.view.addSubview(self.color_button)
+        if self.mode == .create {
+            let default_color = UIColor(red: CGFloat(0.0039), green: CGFloat(0.7804), blue: CGFloat(0.9882), alpha: 1.0)
+            
+            self.color_picker.selectedColor = default_color
+            
+            self.color_button.setTitle(default_color.accessibilityName, for: .normal)
+            self.color_button.setTitleColor(default_color, for: .normal)
+            
+        } else {
+            self.color_picker.selectedColor = TaskList.lists_map[self.task_list_uuid!]!.color
+            
+            self.color_button.setTitle(TaskList.lists_map[self.task_list_uuid!]!.color.accessibilityName, for: .normal)
+            self.color_button.setTitleColor(TaskList.lists_map[self.task_list_uuid!]!.color, for: .normal)
+        }
+        self.color_button.addTarget(self, action: #selector(self.open_color_picker), for: .touchUpInside)
+        
+        
+        
+        
+        
+        
         
         let create_button = UIButton()
         if self.mode == .create {
@@ -76,9 +134,11 @@ class CreateListViewController: UIViewController {
         }
         
         super.view.addSubview(create_button)
-        create_button.backgroundColor = .systemGray3
-        create_button.setTitleColor(.white, for: .normal)
-        create_button.frame = CGRect(x: 100, y: 400, width: 200, height: 45)
+        create_button.backgroundColor = StyleManager.Theme.fill()
+        create_button.setTitleColor(StyleManager.Theme.text(), for: .normal)
+        create_button.frame = StyleManager.get_default_row_frame()
+        create_button.frame.origin.y += StyleManager.window_top_padding() + 20*StyleManager.row_padding_height() + 2*StyleManager.row_height()
+        create_button.layer.cornerRadius = StyleManager.corner_radius()
         create_button.addTarget(self, action: #selector(self.create_list), for: .touchUpInside)
     }
     
@@ -136,9 +196,10 @@ class CreateListViewController: UIViewController {
 
 
 extension CreateListViewController: UIColorPickerViewControllerDelegate{
-//    func colorPickerViewControllerDidFinish(_ controller: UIColorPickerViewController){
-//        print("close")
-//    }
+    func colorPickerViewControllerDidFinish(_ controller: UIColorPickerViewController){
+        self.color_button.setTitle(self.color_picker.selectedColor.accessibilityName, for: .normal)
+        self.color_button.setTitleColor(self.color_picker.selectedColor, for: .normal)
+    }
     
 //    func colorPickerViewController(_ controller: UIColorPickerViewController, didSelect: UIColor, continuously: Bool){
 //
