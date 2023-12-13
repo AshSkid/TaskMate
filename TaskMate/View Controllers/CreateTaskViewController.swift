@@ -20,19 +20,12 @@ class CreateTaskViewController: UIViewController {
     
     var task_list_uuid: UUID!
     var name_text_field: UITextField = {
-        var text_field: UITextField = UITextField(frame: CGRect(x: 100, y: 100, width: 200, height: 30));
-        text_field.backgroundColor = .systemGray3
-        text_field.placeholder = "Task Name"
         
-//        sampleTextField.placeholder = "Enter text here"
-//        sampleTextField.font = UIFont.systemFont(ofSize: 15)
-//        sampleTextField.borderStyle = UITextField.BorderStyle.roundedRect
-//        sampleTextField.autocorrectionType = UITextAutocorrectionType.no
-//        sampleTextField.keyboardType = UIKeyboardType.default
-//        sampleTextField.returnKeyType = UIReturnKeyType.done
-//        sampleTextField.clearButtonMode = UITextField.ViewMode.whileEditing
-//        sampleTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-//        sampleTextField.delegate = self
+        var text_field: UITextField = UITextField(frame: StyleManager.get_default_row_frame());
+        text_field.frame.origin.y += StyleManager.window_top_padding() + 6*StyleManager.row_padding_height()
+        text_field.backgroundColor = StyleManager.Theme.fill()
+        text_field.placeholder = "Task Name"
+        text_field.layer.cornerRadius = StyleManager.corner_radius()
         
         
         return text_field
@@ -40,7 +33,9 @@ class CreateTaskViewController: UIViewController {
     
     
     var date_picker: UIDatePicker = {
-        var picker = UIDatePicker(frame: CGRect(x: 100, y: 200, width: 200, height: 30))
+        var picker = UIDatePicker(frame: StyleManager.get_default_row_frame())
+        picker.frame.origin.y += StyleManager.window_top_padding() + 13*StyleManager.row_padding_height() + StyleManager.row_height()
+        
         picker.preferredDatePickerStyle = .compact
         picker.datePickerMode = .date
         
@@ -66,7 +61,7 @@ class CreateTaskViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        super.view.backgroundColor = .systemBackground
+        super.view.backgroundColor = StyleManager.Theme.background()
         if self.mode == .create {
             super.navigationItem.title = "Create Task"
         }else{
@@ -75,8 +70,34 @@ class CreateTaskViewController: UIViewController {
         
         
         super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.dismiss_self))
+        super.navigationItem.leftBarButtonItem!.tintColor = StyleManager.Theme.text_2()
+        
+        let name_text_label = UILabel(frame: CGRect(
+            x: StyleManager.row_padding_width(),
+            y: StyleManager.window_top_padding() + 2*StyleManager.row_padding_height(),
+            width: StyleManager.screen_width(),
+            height: StyleManager.row_height()
+        ))
+        super.view.addSubview(name_text_label)
+        name_text_label.text = "Name:"
+        name_text_label.textColor = StyleManager.Theme.text()
+        
+        
         
         self.view.addSubview(self.name_text_field)
+        
+        
+        let date_label = UILabel(frame: CGRect(
+            x: StyleManager.row_padding_width(),
+            y: StyleManager.window_top_padding() + 9*StyleManager.row_padding_height() + StyleManager.row_height(),
+            width: StyleManager.screen_width(),
+            height: StyleManager.row_height()
+        ))
+        super.view.addSubview(date_label)
+        date_label.text = "Date:"
+        date_label.textColor = StyleManager.Theme.text()
+        
+        
         
         self.view.addSubview(self.date_picker)
         
@@ -90,9 +111,11 @@ class CreateTaskViewController: UIViewController {
         }
         
         super.view.addSubview(create_button)
-        create_button.backgroundColor = .systemGray3
-        create_button.setTitleColor(.white, for: .normal)
-        create_button.frame = CGRect(x: 100, y: 400, width: 200, height: 45)
+        create_button.backgroundColor = StyleManager.Theme.fill()
+        create_button.setTitleColor(StyleManager.Theme.text(), for: .normal)
+        create_button.frame = StyleManager.get_default_row_frame()
+        create_button.frame.origin.y += StyleManager.window_top_padding() + 20*StyleManager.row_padding_height() + 2*StyleManager.row_height()
+        create_button.layer.cornerRadius = StyleManager.corner_radius()
         create_button.addTarget(self, action: #selector(self.complete), for: .touchUpInside)
     }
     

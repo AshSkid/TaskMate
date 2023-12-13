@@ -57,7 +57,7 @@ class CreateListViewController: UIViewController {
         return picker
     }()
     
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         super.view.backgroundColor = StyleManager.Theme.background()

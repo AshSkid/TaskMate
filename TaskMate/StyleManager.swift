@@ -54,9 +54,9 @@ struct StyleManager{
             return UIColor(red: CGFloat(0.1843), green: CGFloat(0.1843), blue: CGFloat(0.1843), alpha: 1.0)
         }
         
-        static func system_is_darkmode() -> Bool {
-            return UITraitCollection.current.userInterfaceStyle == .dark
-        }
+//        static func system_is_darkmode() -> Bool {
+//            return UITraitCollection.current.userInterfaceStyle == .dark
+//        }
         
         static func red() -> UIColor {
             return UIColor(red: 1.0, green: CGFloat(0.2509), blue: CGFloat(0.2509), alpha: 1.0)

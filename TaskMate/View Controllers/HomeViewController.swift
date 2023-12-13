@@ -20,19 +20,31 @@ class HomeViewController: UIViewController {
         self.safe_area = super.view.layoutMarginsGuide
         self.setup_table_view()
         
-        super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(open_settings))
-        super.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(create_task_list))
+//        super.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(self.open_settings))
+//        super.navigationItem.leftBarButtonItem!.image = UIImage(systemName: "gearshape.fill")
+//        super.navigationItem.leftBarButtonItem!.tintColor = StyleManager.Theme.text_2()
+//        super.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(create_task_list))
+        
+        
+        
+        let add_button = UIButton()
+        self.view.addSubview(add_button)
+        add_button.setTitle("+ Create List...", for: .normal)
+        add_button.setTitleColor(StyleManager.Theme.text_2(), for: .normal)
+        add_button.backgroundColor = StyleManager.Theme.fill()
+        add_button.frame = CGRect(x: 0, y: StyleManager.screen_height() - StyleManager.row_height(), width: StyleManager.screen_width(), height: StyleManager.row_height())
+        add_button.addTarget(self, action: #selector(self.create_task_list), for: .touchUpInside)
         
 //        TaskList.setup_lists()
     }
     
-    @objc func open_settings(){
-        let rootVC = SettingsViewController()
-       
-        let navVC = UINavigationController(rootViewController: rootVC)
-        navVC.modalPresentationStyle = .fullScreen
-        super.present(navVC, animated: true)
-    }
+//    @objc func open_settings(){
+//        let rootVC = SettingsViewController()
+//
+//        let navVC = UINavigationController(rootViewController: rootVC)
+//        navVC.modalPresentationStyle = .fullScreen
+//        super.present(navVC, animated: true)
+//    }
     
     @objc func create_task_list(){
         let rootVC = CreateListViewController()
